@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.cybergame.ui.fxcontroller.ReportController"
+            prefHeight="700" prefWidth="1200" style="-fx-background-color: -primary-color;">
+
+    <stylesheets>
+        <URL value="@../../css/base.css" />
+        <URL value="@../../css/admin.css" />
+    </stylesheets>
+
+    <top>
+        <VBox spacing="15" style="-fx-padding: 20;">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="BÁO CÁO DOANH THU &amp; DÒNG TIỀN" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button onAction="#onRefresh" text="🔄 Làm mới" style="-fx-background-color: -accent-color; -fx-text-fill: white; -fx-cursor: hand;"/>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: -secondary-color; -fx-padding: 10; -fx-background-radius: 5;">
+                <Label text="Từ ngày:" style="-fx-text-fill: -text-muted;"/>
+                <DatePicker fx:id="dpFrom" promptText="dd/mm/yyyy" prefWidth="150"/>
+                
+                <Label text="Đến ngày:" style="-fx-text-fill: -text-muted;"/>
+                <DatePicker fx:id="dpTo" promptText="dd/mm/yyyy" prefWidth="150"/>
+                
+                <Button onAction="#onFilter" text="Xem Báo Cáo" style="-fx-background-color: -success-color; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            </HBox>
+            
+            <HBox spacing="15">
+                
+                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" style="-fx-border-color: #f472b6; -fx-border-width: 0 0 0 4; -fx-padding: 15; -fx-background-color: #3f2e3e;">
+                    <Label text="TỔNG TIỀN NẠP (THỰC THU)" style="-fx-text-fill: #f472b6; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                    <Label fx:id="lblTotalTopUp" text="0 VNĐ" style="-fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+                    <Label text="(Tiền mặt thu vào két)" style="-fx-text-fill: -text-muted; -fx-font-size: 11px; -fx-font-style: italic;"/>
+                </VBox>
+
+                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" style="-fx-border-color: -success-color; -fx-border-width: 0 0 0 4; -fx-padding: 15; -fx-background-color: -secondary-color;">
+                    <Label text="DOANH THU HÓA ĐƠN" style="-fx-text-fill: -text-muted; -fx-font-size: 12px;"/>
+                    <Label fx:id="lblTotalRevenue" text="0 VNĐ" style="-fx-text-fill: -success-color; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <Label text="(Khách đã tiêu xài)" style="-fx-text-fill: -text-muted; -fx-font-size: 11px;"/>
+                </VBox>
+                
+                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" style="-fx-border-color: -accent-color; -fx-border-width: 0 0 0 4; -fx-padding: 15; -fx-background-color: -secondary-color;">
+                    <Label text="DOANH THU GIỜ CHƠI" style="-fx-text-fill: -text-muted; -fx-font-size: 12px;"/>
+                    <Label fx:id="lblMachineRevenue" text="0 VNĐ" style="-fx-text-fill: -accent-color; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                </VBox>
+                
+                <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" style="-fx-border-color: #fbbf24; -fx-border-width: 0 0 0 4; -fx-padding: 15; -fx-background-color: -secondary-color;">
+                    <Label text="DOANH THU DỊCH VỤ" style="-fx-text-fill: -text-muted; -fx-font-size: 12px;"/>
+                    <Label fx:id="lblServiceRevenue" text="0 VNĐ" style="-fx-text-fill: #fbbf24; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+            
+            <Separator style="-fx-background-color: #334155;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent;">
+            
+            <Tab text="💳 LỊCH SỬ NẠP TIỀN (CASH FLOW)">
+                <VBox spacing="10" style="-fx-padding: 10 20 0 20;">
+                     <TableView fx:id="tableTopUps" VBox.vgrow="ALWAYS" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colTopId" text="ID" prefWidth="60"/>
+                            <TableColumn fx:id="colTopTime" text="Thời gian" prefWidth="140" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colTopCustomer" text="Tài khoản nạp" prefWidth="150"/>
+                            
+                            <TableColumn fx:id="colTopRole" text="Vai trò" prefWidth="100" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colTopStaffId" text="Mã NV" prefWidth="80" style="-fx-alignment: CENTER; -fx-text-fill: gray;"/>
+                            <TableColumn fx:id="colTopOperator" text="Người thực hiện" prefWidth="150"/>
+                            
+                            <TableColumn fx:id="colTopAmount" text="SỐ TIỀN THỰC THU" prefWidth="150" style="-fx-alignment: CENTER-RIGHT; -fx-text-fill: #f472b6; -fx-font-weight: bold;"/>
+                            <TableColumn fx:id="colTopNote" text="Ghi chú" prefWidth="150" style="-fx-font-style: italic;"/>
+                        </columns>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <Tab text="🧾 LỊCH SỬ HÓA ĐƠN (DOANH THU)">
+                <VBox spacing="10" style="-fx-padding: 10 20 0 20;">
+                    <TableView fx:id="tableInvoices" VBox.vgrow="ALWAYS" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colInvId" text="Mã HĐ" prefWidth="80" style="-fx-alignment: CENTER; -fx-text-fill: gray;"/>
+                            <TableColumn fx:id="colInvTime" text="Thời gian" prefWidth="140" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colInvCustomer" text="Khách Hàng" prefWidth="150" style="-fx-alignment: CENTER_LEFT;"/>
+                            <TableColumn fx:id="colInvComputer" text="Máy" prefWidth="80" style="-fx-alignment: CENTER;"/>
+                            
+                            <TableColumn fx:id="colInvService" text="Tiền Order" prefWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-text-fill: #fbbf24;"/>
+                            <TableColumn fx:id="colInvMachine" text="Tiền Máy" prefWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-text-fill: -accent-color;"/>
+                            
+                            <TableColumn fx:id="colInvTotal" text="TỔNG TRỪ TK" prefWidth="140" style="-fx-alignment: CENTER-RIGHT; -fx-text-fill: -success-color; -fx-font-weight: bold;"/>
+                        </columns>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <Tab text="🍔 CHI TIẾT MÓN ĂN">
+                <VBox spacing="10" style="-fx-padding: 10 20 0 20;">
+                    <TableView fx:id="tableOrderHistory" VBox.vgrow="ALWAYS" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="colOrdTime" text="Thời gian" prefWidth="140" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colOrdName" text="Món / Dịch vụ" prefWidth="250" style="-fx-alignment: CENTER_LEFT; -fx-font-weight: bold;"/>
+                            <TableColumn fx:id="colOrdQty" text="SL" prefWidth="60" style="-fx-alignment: CENTER;"/>
+                            <TableColumn fx:id="colOrdPrice" text="Đơn giá" prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
+                            <TableColumn fx:id="colOrdTotal" text="Thành tiền" prefWidth="120" style="-fx-alignment: CENTER-RIGHT; -fx-text-fill: #fbbf24;"/>
+                        </columns>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>
